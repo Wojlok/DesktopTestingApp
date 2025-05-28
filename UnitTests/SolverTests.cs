@@ -143,7 +143,7 @@ namespace UnitTests
             variables[2] = 3; // x
             variables[3] = 4; // y
             c = 300;
-            n = 2;
+            n = 1;
             if (Solver.Calculate(variables[0], variables[1], variables[2], variables[3], c, n) != 317)
             {
                 result = false;
@@ -154,7 +154,7 @@ namespace UnitTests
             variables[2] = 2; // x
             variables[3] = 1; // y
             c = 2000;
-            n = 3;
+            n = 2;
             if (Solver.Calculate(variables[0], variables[1], variables[2], variables[3], c, n) != 2035)
             {
                 result = false;
@@ -165,7 +165,7 @@ namespace UnitTests
             variables[2] = 512; // x
             variables[3] = 7; // y
             c = 5;
-            n = 1;
+            n = 0;
             if (Solver.Calculate(variables[0], variables[1], variables[2], variables[3], c, n) != 3097)
             {
                 result = false;
