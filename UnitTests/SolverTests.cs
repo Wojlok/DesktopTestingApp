@@ -26,7 +26,8 @@ namespace UnitTests
                 }
                 c = 2;
                 n = 3;
-                if (Solver.Calculate(variables[0], variables[1], variables[2], variables[3], c, n) != null)
+                if (Solver.Calculate(variables[0], variables[1], 
+                    variables[2], variables[3], c, n) != null)
                 {
                     result = false;
                 }
@@ -50,7 +51,8 @@ namespace UnitTests
                 }
                 c = 2;
                 n = 3;
-                if (Solver.Calculate(variables[0], variables[1], variables[2], variables[3], c, n) != null)
+                if (Solver.Calculate(variables[0], variables[1],
+                    variables[2], variables[3], c, n) != null)
                 {
                     result = false;
                 }
@@ -73,7 +75,8 @@ namespace UnitTests
                     c = j;
                     n = j;
                 }
-                if (Solver.Calculate(variables[0], variables[1], variables[2], variables[3], c, n) != null)
+                if (Solver.Calculate(variables[0], variables[1],
+                    variables[2], variables[3], c, n) != null)
                 {
                     result = false;
                 }
@@ -93,13 +96,15 @@ namespace UnitTests
             }
             c = -1;
             n = 2;
-            if (Solver.Calculate(variables[0], variables[1], variables[2], variables[3], c, n) != null)
+            if (Solver.Calculate(variables[0], variables[1],
+                variables[2], variables[3], c, n) != null)
             {
                 result = false;
             }
             c = 2;
             n = -1;
-            if (Solver.Calculate(variables[0], variables[1], variables[2], variables[3], c, n) != null)
+            if (Solver.Calculate(variables[0], variables[1],
+                variables[2], variables[3], c, n) != null)
             {
                 result = false;
             }
@@ -118,13 +123,15 @@ namespace UnitTests
             }
             c = int.MaxValue;
             n = 2;
-            if (Solver.Calculate(variables[0], variables[1], variables[2], variables[3], c, n) != null)
+            if (Solver.Calculate(variables[0], variables[1],
+                variables[2], variables[3], c, n) != null)
             {
                     result = false;
             }
             c = 2;
             n = int.MaxValue;
-            if (Solver.Calculate(variables[0], variables[1], variables[2], variables[3], c, n) != null)
+            if (Solver.Calculate(variables[0], variables[1],
+                variables[2], variables[3], c, n) != null)
             {
                 result = false;
             }
@@ -144,7 +151,8 @@ namespace UnitTests
             variables[3] = 4; // y
             c = 300;
             n = 1;
-            if (Solver.Calculate(variables[0], variables[1], variables[2], variables[3], c, n) != 317)
+            if (Solver.Calculate(variables[0], variables[1],
+                variables[2], variables[3], c, n) != 317)
             {
                 result = false;
             }
@@ -155,7 +163,8 @@ namespace UnitTests
             variables[3] = 1; // y
             c = 2000;
             n = 2;
-            if (Solver.Calculate(variables[0], variables[1], variables[2], variables[3], c, n) != 2035)
+            if (Solver.Calculate(variables[0], variables[1],
+                variables[2], variables[3], c, n) != 2035)
             {
                 result = false;
             }
@@ -166,7 +175,8 @@ namespace UnitTests
             variables[3] = 7; // y
             c = 5;
             n = 0;
-            if (Solver.Calculate(variables[0], variables[1], variables[2], variables[3], c, n) != 3097)
+            if (Solver.Calculate(variables[0], variables[1],
+                variables[2], variables[3], c, n) != 3097)
             {
                 result = false;
             }
@@ -189,7 +199,8 @@ namespace UnitTests
                     if (i == j) variables[j] = Double.PositiveInfinity;
                     else variables[j] = 25;
                 }
-                if (Solver.Calculate(variables[0], variables[1], variables[2], variables[3], c, n) != null)
+                if (Solver.Calculate(variables[0], variables[1],
+                    variables[2], variables[3], c, n) != null)
                 {
                     result = false;
                 }
@@ -198,7 +209,8 @@ namespace UnitTests
                     if (i == j) variables[j] = Double.NegativeInfinity;
                     else variables[j] = 25;
                 }
-                if (Solver.Calculate(variables[0], variables[1], variables[2], variables[3], c, n) != null)
+                if (Solver.Calculate(variables[0], variables[1],
+                    variables[2], variables[3], c, n) != null)
                 {
                     result = false;
                 }
