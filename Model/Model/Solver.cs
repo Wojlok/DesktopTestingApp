@@ -22,7 +22,7 @@
             if (Double.IsNaN((double)a) || Double.IsNaN((double)b) || Double.IsNaN((double)x) || Double.IsNaN((double)y)) return null;
             if (c < 0 || n < 0) return null;
             double? f;
-            f = a * Math.Pow((double)x, n) + b * Math.Pow((double)y, n - 1) + c;
+            f = a * Math.Pow((double)x, n + 1) + b * Math.Pow((double)y, n) + c;
             if (a == double.MaxValue || b == double.MaxValue || x == double.MaxValue || y == double.MaxValue || f == double.MaxValue) return null;
             if (double.IsInfinity((double)f))
             {
