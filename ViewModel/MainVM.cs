@@ -47,10 +47,10 @@ namespace ViewModel
         private string[] _functionsTexts =
         {
             "f(x, y) = ax + b + c",
-            "f(x, y) = ax^2 + by + c",
-            "f(x, y) = ax^3 + by^2 + c",
-            "f(x, y) = ax^4 + by^3 + c",
-            "f(x, y) = ax^5 + by^4 + c"
+            "f(x, y) = ax\xB2 + by + c",
+            "f(x, y) = ax\xB3 + by\xB2 + c",
+            "f(x, y) = ax\x2074 + by\xB3 + c",
+            "f(x, y) = ax\x2075 + by\x2074 + c"
         };
 
         [ObservableProperty]
