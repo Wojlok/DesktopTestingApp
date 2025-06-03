@@ -5,14 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:View"
         xmlns:viewmodel="clr-namespace:ViewModel;assembly=ViewModel"
-        xmlns:converters="clr-namespace:View.Converters"
         d:DataContext="{d:DesignInstance Type={x:Type viewmodel:MainVM}}"
         mc:Ignorable="d"
-        Title="Тестовое задание" Height="400" Width="350">
-
-    <Window.Resources>
-        <converters:TextToDoubleConverter x:Key="textToDoubleConverter"/>
-    </Window.Resources>
+        MinHeight="250" MinWidth="360"
+        Title="Тестовое задание" Icon="/icons8-math-100.ico" Height="400" Width="360">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -33,50 +29,66 @@
             
             <!-- Function List -->
             <ListBox
-                 ItemsSource="{Binding Functions}"
-                 SelectedIndex="{Binding FunctionIndex}"
+                 ItemsSource="{Binding FunctionsList}"
+                 SelectedValue="{Binding CurrentFunction}"
                  Grid.Column="0"/>
 
             <!-- Coefficient Menu -->
             <StackPanel Orientation="Vertical" Grid.Column="1" MinHeight="110">
-                <Label Content="{Binding FunctionName}"
+                <Label Content="{Binding CurrentFunction.FunctionText}"
                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
 
                 <DockPanel LastChildFill="True">
                     <Label Content="a" Width="20" HorizontalContentAlignment="Center"/>
-                    <TextBox Text="{Binding A, Converter={StaticResource textToDoubleConverter}}"
+                    <TextBox Text="{Binding CurrentFunction.A.Text, UpdateSourceTrigger=PropertyChanged}"
                              MinWidth="200"  HorizontalAlignment="Stretch"
-                             VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                             VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+                    </TextBox>
                 </DockPanel>
                 <DockPanel>
                     <Label Content="b" Width="20" HorizontalContentAlignment="Center"/>
-                    <TextBox Text="{Binding B, Converter={StaticResource textToDoubleConverter}}"
+                    <TextBox Text="{Binding CurrentFunction.B.Text, UpdateSourceTrigger=PropertyChanged}"
                              MinWidth="200"  HorizontalAlignment="Stretch"
                              VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
                 </DockPanel>
                 <DockPanel>
                     <Label Content="c" Width="20" HorizontalContentAlignment="Center"/>
                     <ComboBox
-                        SelectedIndex="{Binding CurrentCIndex, Mode=TwoWay}"
-                        ItemsSource="{Binding CurrentCList}" MinWidth="200" HorizontalAlignment="Stretch"
+                        SelectedItem="{Binding CurrentFunction.C, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        ItemsSource="{Binding CurrentFunction.CList}" MinWidth="200" HorizontalAlignment="Stretch"
                         VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
                 </DockPanel>
             </StackPanel>
         </Grid>
         
         <!-- Result Table -->
-        <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding TableRows}" Grid.ColumnSpan="2" Margin="0,0,0,0" Grid.Row="1">
+        <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding TableRows}" Grid.ColumnSpan="2" Margin="0,0,0,0" Grid.Row="1" HeadersVisibility="Column">
             <DataGrid.Columns>
-                <DataGridTextColumn Width="*" MinWidth="110"
-                                    Binding="{Binding X, UpdateSourceTrigger=LostFocus, Converter={StaticResource textToDoubleConverter}}" 
+                <DataGridTextColumn Width="*"
+                                    Binding="{Binding X.Text, UpdateSourceTrigger=PropertyChanged}" 
                                     Header="x">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Width="*" MinWidth="110"
-                                    Binding="{Binding Y, UpdateSourceTrigger=LostFocus, Converter={StaticResource textToDoubleConverter}}"
+                <DataGridTextColumn Width="*"
+                                    Binding="{Binding Y.Text, UpdateSourceTrigger=PropertyChanged}"
                                     Header="y">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn IsReadOnly="True"  Width="*" MinWidth="110"
+                <DataGridTextColumn IsReadOnly="True"  Width="*"
                                     Binding="{Binding Func}" Header="f(x,y)">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
             </DataGrid.Columns>
             <DataGrid.Resources>
@@ -85,7 +97,7 @@
                     <Setter Property="Foreground" Value="Black" />
                     <Setter Property="BorderBrush" Value="Black"/>
                     <Setter Property="BorderThickness" Value="1 1 1 1"/>
-                    <Setter Property="Margin" Value="-1,-1,0,0" />
+                    <Setter Property="Margin" Value="-1,-1,-1,0" />
                     <Setter Property="Height" Value="28" />
                     <Setter Property="Width" Value="auto"/>
                     <Setter Property="HorizontalContentAlignment" Value="Center"/>

@@ -9,7 +9,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="icons8-math-100.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ViewModel\ViewModel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="icons8-math-100.ico" />
   </ItemGroup>
 
 </Project>
