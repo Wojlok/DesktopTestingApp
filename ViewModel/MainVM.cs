@@ -10,39 +10,6 @@ namespace ViewModel
     /// </summary>
     public partial class MainVM : ObservableRecipient, IRecipient<RequestTableMessage>
     {
-        
-        private List<double?> _aList = new List<double?>();
-
-        private List<double?> _bList = new List<double?>();
-
-        private List<int> _cIndexList = new List<int>();
-
-
-        [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(TableRows))]
-        private int _currentCIndex;
-
-        [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(TableRows))]
-        private double? a = null;
-
-        [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(TableRows))]
-        private double? b = null;
-
-        [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(A))]
-        [NotifyPropertyChangedFor(nameof(B))]
-        [NotifyPropertyChangedFor(nameof(CurrentCIndex))]
-        [NotifyPropertyChangedFor(nameof(CurrentCList))]
-        private ObservableCollection<TableVM> _tableRows = new();
-
-        [ObservableProperty]
-        private List<string> _functions = new List<string>()
-        {
-            "Линейная", "Квадратичная", "Кубическая",
-            "4-ой степени", "5-ой степени"
-        };
 
         private string[] _functionsTexts =
         {
@@ -54,75 +21,23 @@ namespace ViewModel
         };
 
         [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(FunctionIndex))]
-        private string _functionName;
+        private List<string> _functions = new List<string>()
+        {
+            "Линейная", "Квадратичная", "Кубическая",
+            "4-ой степени", "5-ой степени"
+        };
 
         [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(A))]
-        [NotifyPropertyChangedFor(nameof(B))]
-        [NotifyPropertyChangedFor(nameof(CurrentCIndex))]
-        [NotifyPropertyChangedFor(nameof(CurrentCList))]
-        [NotifyPropertyChangedFor(nameof(TableRows))]
-        private int _functionIndex;
-
-        List<ObservableCollection<int>> _listC = new();
+        private ObservableCollection<FunctionVM> _functionsList = new();
 
         [ObservableProperty]
-        private ObservableCollection<int> _currentCList;
+        [NotifyPropertyChangedFor(nameof(FunctionsList))]
+        private FunctionVM _currentFunction;
 
 
-        partial void OnFunctionIndexChanged(int oldValue, int newValue)
-        {
-            _aList[oldValue] = A;
-            _bList[oldValue] = B;
-            _cIndexList[oldValue] = CurrentCIndex;
+        [ObservableProperty]
+        private ObservableCollection<TableVM> _tableRows = new();
 
-            A = _aList[newValue];
-            B = _bList[newValue];
-            CurrentCList = _listC[newValue];
-            CurrentCIndex = _cIndexList[newValue];
-            FunctionName = _functionsTexts[newValue];
-
-            OnPropertyChanged(nameof(CurrentCList));  
-        }
-
-        partial void OnAChanged(double? value)
-        {
-            WeakReferenceMessenger.Default.Send(new TableDataMessage(
-                new TableData(A,B, CurrentCList[CurrentCIndex], CurrentCIndex))
-                );
-        }
-
-        partial void OnBChanged(double? value)
-        {
-            WeakReferenceMessenger.Default.Send(new TableDataMessage(
-                new TableData(A, B, CurrentCList[CurrentCIndex], CurrentCIndex))
-                );
-        }
-
-        partial void OnCurrentCIndexChanged(int value)
-        {
-            if (value > -1)
-            {
-                WeakReferenceMessenger.Default.Send(new TableDataMessage(
-                    new TableData(A, B, CurrentCList[CurrentCIndex], CurrentCIndex))
-                    );
-            }
-        }
-
-        partial void OnFunctionIndexChanged(int value)
-        {
-            WeakReferenceMessenger.Default.Send(new TableDataMessage(
-                new TableData(A, B, CurrentCList[CurrentCIndex], CurrentCIndex))
-                );
-        }
-
-        public void Receive(RequestTableMessage message)
-        {
-            WeakReferenceMessenger.Default.Send(new TableDataMessage(
-               new TableData(A, B, CurrentCList[CurrentCIndex], CurrentCIndex))
-               );
-        }
 
         /// <summary>
         /// Default constructor of the class.
@@ -131,20 +46,54 @@ namespace ViewModel
         {
             IsActive = true;
 
-            CurrentCIndex = 0;
-            for (int i = 0; i < Functions.Count; i++)
+            for (int i = 0; i < _functions.Count; i++)
             {
-                var temp = Model.Constant.GetListC(i);
-                _listC.Add(new ObservableCollection<int>(temp));
-                _aList.Add(a);
-                _bList.Add(b);
-                _cIndexList.Add(CurrentCIndex);
+                List<int> cL = Model.Constant.GetListC(i);
+                FunctionsList.Add(new(_functions[i], new(cL), i, _functionsTexts[i]));
             }
-            FunctionName = _functionsTexts[0];
-            CurrentCList = _listC[0];
-            FunctionIndex = 0;
+
+            CurrentFunction = FunctionsList.First();
             TableRows.Add(new TableVM());
         }
+
+        /// <summary>
+        /// Event handler for changed function type.
+        /// </summary>
+        /// <param name="oldValue">Previous function type.</param>
+        /// <param name="newValue">Present function type.</param>
+        partial void OnCurrentFunctionChanged(FunctionVM? oldValue, FunctionVM newValue)
+        {
+            if (oldValue != null)
+            {
+                oldValue.A.PropertyChanged -= TextboxValueChanged;
+                oldValue.B.PropertyChanged -= TextboxValueChanged;
+                oldValue.PropertyChanged -= TextboxValueChanged;
+            }
+
+            if (newValue != null)
+            {
+                newValue.A.PropertyChanged += TextboxValueChanged;
+                newValue.B.PropertyChanged += TextboxValueChanged;
+                newValue.PropertyChanged += TextboxValueChanged;
+            }
+
+            UpdateTable();
+        }
+
+        private void TextboxValueChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+            => UpdateTable();
+
+        private void UpdateTable()
+        {
+            var message = new TableData(CurrentFunction.A.Value, CurrentFunction.B.Value, CurrentFunction.C, CurrentFunction.N);
+            WeakReferenceMessenger.Default.Send(new TableDataMessage(message));
+        }
+
+        /// <summary>
+        /// Request for table data update.
+        /// </summary>
+        /// <param name="message">Requastable data with function parameters.</param>
+        public void Receive(RequestTableMessage message) => UpdateTable();
 
     }
 }

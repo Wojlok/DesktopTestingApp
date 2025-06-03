@@ -10,31 +10,31 @@ namespace ViewModel
     public partial class TableVM : ObservableRecipient, IRecipient<TableDataMessage>
     {
 
-        [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(Func))]
         private double? _a;
 
-        [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(Func))]
         private double? _b;
 
-        [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(Func))]
         private int _c;
 
-        [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(Func))]
         private int _n;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(Func))]
-        private double? _x;
+        private DoubleTextboxVM _x = new();
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(Func))]
-        private double? _y;
+        private DoubleTextboxVM _y = new();
 
-        private double? _func;
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public TableVM()
+        {
+            IsActive = true;
+            X.PropertyChanged += DoublePropertyChanged;
+            Y.PropertyChanged += DoublePropertyChanged;
+        }
 
         /// <summary>
         /// Function f(x,y) getter.
@@ -43,10 +43,9 @@ namespace ViewModel
         {
             get
             {
-                double? result = Model.Solver.Calculate(A, B, X, Y, C, N);
+                double? result = Model.Solver.Calculate(_a, _b, X.Value, Y.Value, _c, _n);
                 return result;
             }
-
         }
 
         /// <summary>
@@ -54,40 +53,30 @@ namespace ViewModel
         /// </summary>
         public void Receive(TableDataMessage message)
         {
-            A = message.Value.A;
-            B = message.Value.B;
-            C = message.Value.C;
-            N = message.Value.N;
+            _a = message.Value.A;
+            _b = message.Value.B;
+            _c = message.Value.C;
+            _n = message.Value.N;
+            OnPropertyChanged(nameof(Func));
         }
 
-        partial void OnXChanged(double? value)
+        partial void OnXChanged(DoubleTextboxVM value)
         {
-            WeakReferenceMessenger.Default.Send(new RequestTableMessage(null));
+            WeakReferenceMessenger.Default.Send(new RequestTableMessage(this));
         }
 
-        partial void OnYChanged(double? value)
+        partial void OnYChanged(DoubleTextboxVM value)
         {
-            WeakReferenceMessenger.Default.Send(new RequestTableMessage(null));
+            WeakReferenceMessenger.Default.Send(new RequestTableMessage(this));
         }
 
         /// <summary>
         /// Table data initialization constructor.
         /// </summary>
-        public TableVM(double? x, double? y, double? func) : this()
+        private void DoublePropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            X = x;
-            Y = y;
-            this._func = func;
+            WeakReferenceMessenger.Default.Send(new RequestTableMessage(this));
         }
-
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public TableVM()
-        {
-            IsActive = true;
-        }
-
     }
 }
 
