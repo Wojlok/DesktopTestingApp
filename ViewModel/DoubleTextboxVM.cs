@@ -51,9 +51,9 @@ namespace ViewModel
         /// <param name="input">Text from TextBox.</param>
         /// <param name="res">Parsed double.</param>
         /// <returns>Is input numeric.</returns>
-        private bool IsValid(string input, out double? val)
+        private bool IsValid(string input, out double? res)
         {
-            val = null;
+            res = null;
             if (string.IsNullOrEmpty(input))
             {
                 return true;
@@ -63,9 +63,14 @@ namespace ViewModel
                 input += '0';
             }
 
+            if (input.Count(x => x == '.') + input.Count(x => x == ',') >= 2)
+            {
+                return false;
+            }
+
             if (input == "-")
             {
-                val = null;
+                res = null;
                 return true;
             }
 
@@ -82,9 +87,9 @@ namespace ViewModel
                 return false;
             }
 
-            if (double.TryParse(input, out double d))
+            if (double.TryParse(input, out double parsed))
             {
-                val = d;
+                res = parsed;
                 return true;
             }
             return false;
